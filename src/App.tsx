@@ -1,54 +1,33 @@
-import React, { useState, ChangeEvent } from 'react';
+import React, { useState } from "react";
+import './App.css';
 
-export default function CharacterStats() {
-  const [character, setCharacter] = useState({
+export default function CharacterStatus() {
+  const initialCharacter = {
     name: 'Gandalf',
     strength: 10,
     intelligence: 18,
     charisma: 16
-  });
+  };
 
-  function handleChange(e: ChangeEvent<HTMLInputElement>) {
+  const [character, setCharacter] = useState({ ...initialCharacter });
+  const [isEditing, setIsEditing] = useState(false);
+
+  function handleChange(e: { target: { name: any; value: any; }; }) {
     setCharacter({
       ...character,
       [e.target.name]: e.target.value
     });
+    setIsEditing(true);
   }
 
-  const handleFormSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    // Aquí puedes realizar alguna acción con los datos del personaje
-    console.log('Datos del personaje enviados:', character);
-  };
-
-  const containerStyle: React.CSSProperties = {
-    display: 'flex',
-    justifyContent: 'center',
-    alignItems: 'center',
-    height: '100vh'
-  };
-
-  const formStyle: React.CSSProperties = {
-    backgroundColor: '#f0f0f0',
-    padding: '30px',
-    borderRadius: '10px',
-    boxShadow: '0 0 15px rgba(0, 0, 0, 0.2)',
-    width: '400px'
-  };
-
-  const buttonStyle: React.CSSProperties = {
-    backgroundColor: '#4caf50',
-    color: 'white',
-    padding: '10px 15px',
-    border: 'none',
-    borderRadius: '5px',
-    cursor: 'pointer',
-    fontSize: '16px'
-  };
+  function handleSave() {
+    localStorage.setItem('savedCharacter', JSON.stringify(character));
+    setIsEditing(false);
+  }
 
   return (
-    <div style={containerStyle}>
-      <form style={formStyle} onSubmit={handleFormSubmit}>
+    <div className="character-form-container">
+      <form className="character-form">
         <label>
           Name:
           <input
@@ -56,42 +35,40 @@ export default function CharacterStats() {
             value={character.name}
             onChange={handleChange}
           />
-        </label>
-        <br />
-        <label>
+      </label>
+      <br />
+      <label>
           Strength:
           <input
             name="strength"
             value={character.strength}
             onChange={handleChange}
           />
-        </label>
-        <br />
-        <label>
+      </label>
+      <br />
+      <label>
           Intelligence:
           <input
             name="intelligence"
             value={character.intelligence}
             onChange={handleChange}
           />
-        </label>
-        <br />
-        <label>
+      </label>
+      <br />
+      <label>
           Charisma:
           <input
             name="charisma"
             value={character.charisma}
             onChange={handleChange}
           />
-        </label>
-        <br />
-        <button type="submit" style={buttonStyle}>Enviar</button>
+      </label>
+      <br />
+        {isEditing && <button onClick={handleSave}>Emviar</button>}
       </form>
     </div>
   );
 }
-
-
 
 
 
